@@ -7,6 +7,10 @@ $title = "Rasptimer";
 // The devices being controlled.
 // key:   name of the device
 // value: wiringPi PIN number, see https://projects.drogon.net/raspberry-pi/wiringpi/pins/
+// value2: mutually exclusive big, this is either a 1 or a 0.  If its a 1 it means only one
+//         of these gpio pins can be turned on at a time, so all the other mutually exclusive
+//         ones will get turned off before this one gets turned on. This is meant to provide
+//         some safe guards against accidentally programming the timing incorrectly.
 
 $devices = array(
     "Main pump"    => array(11,1),

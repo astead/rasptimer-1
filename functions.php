@@ -12,9 +12,26 @@ function logEvent( $pin, $event ) {
 }
 
 function runGpio( $cmd, $pin, $args = '' ) {
+    global $devices;
+
     if( $cmd == 'write' ) {
         logEvent( $pin, $args );
     }
+
+    # If we are turning on an exclusive pin, lets go through and turn off all the other
+    # exclusive pins before we turn this one on.
+    if ($cmd == "write" && $args == 1) {
+	    foreach( $devices as $deviceName => $devicePin ) {
+		    if( $devicePin[0] == $pin && $devicePin[1] == 1 ) {
+			    foreach( $devices as $deviceName1 => $devicePin1 ) {
+				    if ($devicePin1[1] == 1 && $devicePin1[0] != $pin) {
+					    runGpio( "write", $devicePin1[0], 0 ); 
+				    }
+			    }
+		    }
+	    }
+    }
+
     exec( "/usr/local/bin/gpio mode $pin out", $out, $status );
     $status = NULL;
     $out    = NULL;

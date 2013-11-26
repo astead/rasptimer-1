@@ -9,8 +9,8 @@ $title = "Rasptimer";
 // value: wiringPi PIN number, see https://projects.drogon.net/raspberry-pi/wiringpi/pins/
 
 $devices = array(
-    "Main pump"    => 11,
-    "Sweeper pump" =>  6
+    "Main pump"    => array(11,1),
+    "Sweeper pump" =>  array(6,1)
 );
 
 // Where to log events. This file must be writeable by the webserver user, e.g. "chown www-data /var/log/rasptimer.log"

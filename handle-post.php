@@ -8,7 +8,7 @@
 
         if( isset( $_POST[$actionPar] )) {
             $turnOn = $_POST[$actionPar] == 'Turn on';
-            runGpio( "write", $devicePin, $turnOn ? "1" : "0" );
+            runGpio( "write", $devicePin[0], $turnOn ? "1" : "0" );
 
             if( isset( $_POST[$durationPar] ) && $_POST[$durationPar] ) { # something other than 0
                 issueAt( $deviceName, $_POST[$durationPar], $turnOn ? "0" : "1" );

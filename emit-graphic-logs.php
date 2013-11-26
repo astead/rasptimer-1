@@ -74,7 +74,7 @@ if( $logFh ) {
             $timeOfDay   = $parsedLine[4]*60*60 + $parsedLine[5]*60 + $parsedLine[6]; 
             $deviceIndex = 0;
             foreach( $devices as $devicePin ) {
-                if( $devicePin == $parsedLine[7] ) {
+                if( $devicePin[0] == $parsedLine[7] ) {
                     break;
                 }
                 ++$deviceIndex;

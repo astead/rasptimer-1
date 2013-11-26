@@ -37,7 +37,7 @@ function issueAt( $deviceName, $minFromNow, $onOff ) {
 
     $devicePin = $devices[$deviceName];
 
-    exec( "echo /usr/bin/php $script $devicePin $onOff | /usr/bin/at 'now + $minFromNow min'" ); 
+    exec( "echo /usr/bin/php $script $devicePin[0] $onOff | /usr/bin/at 'now + $minFromNow min'" );
 }
 
 function readCrontab() {
@@ -50,7 +50,7 @@ function readCrontab() {
     foreach( $out as $line ) {
         if( preg_match( '!^(\d+) (\d+) .*/cron-run\.php (\d+) ([01])$!', $line, $matches )) {
             foreach( $devices as $deviceName => $devicePin ) {
-                if( $devicePin != $matches[3] ) {
+                if( $devicePin[0] != $matches[3] ) {
                     continue;
                 }
                 if( $matches[4] == 1 ) {
@@ -113,8 +113,8 @@ END;
             }
             $hourOff = $hourOff % 24; # runs daily
 
-            $file .= "$minOn $hourOn * * * /usr/bin/php $script $devicePin 1\n";
-            $file .= "$minOff $hourOff * * * /usr/bin/php $script $devicePin 0\n";
+            $file .= "$minOn $hourOn * * * /usr/bin/php $script $devicePin[0] 1\n";
+            $file .= "$minOff $hourOff * * * /usr/bin/php $script $devicePin[0] 0\n";
         }
     } 
     $tmp       = tempnam( '/tmp', 'rasptimer' );

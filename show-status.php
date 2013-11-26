@@ -4,7 +4,7 @@
    <table class="status">
 <?php
     foreach( $devices as $deviceName => $devicePin ) {
-        $deviceStatus = runGpio( "read", $devicePin );
+        $deviceStatus = runGpio( "read", $devicePin[0] );
 ?>  
     <tr>
      <th><?php print( $deviceName ) ?> is:</th>

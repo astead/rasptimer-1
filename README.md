@@ -27,7 +27,7 @@ Installation:
     make
     sudo make install
     cd /var/www
-    sudo git clone https://github.com/jernst/rasptimer.git
+    sudo git clone https://github.com/astead/rasptimer-1.git rasptimer
     touch /var/log/rasptimer.log
     chown www-data /var/log/rasptimer.log
     sudo echo www-data > /etc/at.allow

@@ -81,6 +81,9 @@ function readCrontab() {
                         $ret[$deviceName]['duration']['min'] += 60;
                         $ret[$deviceName]['duration']['hour']--;
                     }
+		    if( $ret[$deviceName]['duration']['hour'] < 0 ) {
+		    	$ret[$deviceName]['duration']['hour'] += 24;
+		    }
                 }
             }
         }

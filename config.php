@@ -11,10 +11,16 @@ $title = "Rasptimer";
 //         of these gpio pins can be turned on at a time, so all the other mutually exclusive
 //         ones will get turned off before this one gets turned on. This is meant to provide
 //         some safe guards against accidentally programming the timing incorrectly.
+// value3: The interval for the number of days to run.  If this value is set to 1 it will
+//         run every day of the month.  If it set to 2 it will run every second day of the
+//         month.  This is implemented by taking the day of the month and mod'ing it with
+//         this number.  If the result is 0 then we run this device if we are writing, 
+//         otherwise we just skip.
 
 $devices = array(
-    "Main pump"    => array(11,1),
-    "Sweeper pump" =>  array(6,1)
+    "Low Speed pump"  => array(6,1,1),
+    "High Speed pump" => array(5,1,3),
+    "Sweep valve"     => array(4,0,3),
 );
 
 // Where to log events. This file must be writeable by the webserver user, e.g. "chown www-data /var/log/rasptimer.log"

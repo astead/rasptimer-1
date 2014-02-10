@@ -14,7 +14,7 @@ function logEvent( $pin, $event ) {
 function runGpio( $cmd, $pin, $args = '' ) {
     global $devices;
 
-    if( $cmd == 'read' || datetime.date.today().day % $devicePin[2] == 0) {
+    if( $cmd == 'read' || (date("j") % $devicePin[2] == 0)) {
 	    if( $cmd == 'write' ) {
 		    logEvent( $pin, $args );
 	    }

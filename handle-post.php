@@ -14,6 +14,60 @@
                 issueAt( $deviceName, $_POST[$durationPar], $turnOn ? "0" : "1" );
             }
         }
+
+	$IntervalPar = $devicePin[0] . '-Interval';
+	if( isset( $_POST[$IntervalPar] ) && $_POST[$IntervalPar] != $devicePin[2] ) {
+		$rewrite_config = True;
+	}
+    }
+    if ($rewrite_config) {
+	$source = "config.php";
+	$target = "config_new.php";
+	$handle = fopen($source, 'r');
+	$handle_out = fopen($target, 'w');
+
+	if ($handle) {
+	    while (($line = fgets($handle)) !== false) {
+	        if (substr($line,0,8) == '$devices') {
+	    		fwrite($handle_out, $line);
+
+			while (($line = fgets($handle)) !== false) {
+	        		if (substr($line,0,2) == ");") {
+					break;
+				}
+			}
+
+			foreach( $devices as $deviceName => $devicePin ) {
+			   $IntervalPar = $devicePin[0] . '-Interval';
+			   if( isset( $_POST[$IntervalPar] ) && $_POST[$IntervalPar] != $devicePin[2] ) {
+				fwrite($handle_out, "    \"" . 
+					$deviceName . "\" => array(" . 
+					$devicePin[0].",".
+					$devicePin[1].",".
+					$_POST[$IntervalPar]."),\n");
+			   } else {
+				fwrite($handle_out, "    \"" . 
+					$deviceName . "\" => array(" . 
+					$devicePin[0].",".
+					$devicePin[1].",".
+					$devicePin[2]."),\n");
+			   }
+			}
+			fwrite($handle_out, $line);
+			
+		} else {
+			fwrite($handle_out, $line);
+		}
+	    }
+	} else {
+	    // error opening the file.
+	}
+	fclose($handle);
+	fclose($handle_out);
+	unlink($source);
+	rename($target, $source);
+        header( "Location: $baseUrl/configure.php" );
+	exit( 0 );
     }
 
 // schedule

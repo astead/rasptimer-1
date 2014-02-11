@@ -30,13 +30,18 @@ if( $page ) {
 }
 
 if( $logFh ) {
-    $reverseDevices = array_flip( $devices );
     while( $line = fgets( $logFh )) {
         if( ( $matches = parseLogLine( $line ))) {
 ?>
    <tr>
     <td><?= sprintf( "%02d-%02d-%02d %02d:%02d:%02d", $matches[1], $matches[2], $matches[3], $matches[4], $matches[5], $matches[6] ) ?></td>
-    <td><?= $reverseDevices[ $matches[7]] ?></td>
+    <td><?php 
+	foreach( $devices as $deviceName => $devicePin ) {
+		if( $devicePin[0] == $matches[7] ) {
+			print($deviceName);
+		}
+	}	
+	?></td>
     <td>
 <?php
             if( $matches[8] == 1 ) {

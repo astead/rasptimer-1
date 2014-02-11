@@ -14,7 +14,18 @@ function logEvent( $pin, $event ) {
 function runGpio( $cmd, $pin, $args = '' ) {
     global $devices;
 
-    if( $cmd == 'read' || (date("j") % $devicePin[2] == 0)) {
+    $run_today = True;
+
+    foreach( $devices as $deviceName => $devicePin ) {
+	    if( $devicePin[0] == $pin) {
+		if( $cmd == 'cron-write' && (date("j") % $devicePin[2] != 0)) {
+			$run_today = False;
+			$cmd = "write";
+		}
+	    }
+    }
+
+    if($run_today) {
 	    if( $cmd == 'write' ) {
 		    logEvent( $pin, $args );
 	    }

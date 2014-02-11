@@ -24,7 +24,6 @@ if( !isset( $devices )) {
 } else if( isset( $_GET ) && count( $_GET ) > 0 ) {
     require_once( 'show-change-schedule.php' );
 } else {
-    require_once( 'show-devices.php' );
     require_once( 'show-status.php' );
     require_once( 'show-schedule.php' );
 }

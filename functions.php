@@ -18,8 +18,10 @@ function runGpio( $cmd, $pin, $args = '' ) {
 
     foreach( $devices as $deviceName => $devicePin ) {
 	    if( $devicePin[0] == $pin) {
-		if( $cmd == 'cron-write' && (date("j") % $devicePin[2] != 0)) {
+		if( $cmd == "cron-write" && (date("j") % $devicePin[2] != 0)) {
 			$run_today = False;
+		}
+		if( $cmd == "cron-write") {
 			$cmd = "write";
 		}
 	    }

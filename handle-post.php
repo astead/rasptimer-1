@@ -22,7 +22,17 @@
     }
     if ($rewrite_config) {
 	$source = "config.php";
-	$target = "config_new.php";
+
+	// I have a setup where I run on a read-only filesystem.
+	// /tmp is mounted on a ramdrive so it is writable.
+	// I then have a small program running which watches for
+	// the creation of the /tmp/config.php file, and if it sees
+	// it is remounts the filesystem as writable, copies over the
+	// config.php file and then remounts the filesystem as read
+	// only again.  If you are using a writable file system you
+	// can simply move the new file over to the old one after
+	// re-writing the config.
+	$target = "/tmp/config.php";
 	$handle = fopen($source, 'r');
 	$handle_out = fopen($target, 'w');
 
@@ -63,9 +73,14 @@
 	    // error opening the file.
 	}
 	fclose($handle);
-	fclose($handle_out);
 	unlink($source);
-	rename($target, $source);
+	fclose($handle_out);
+
+	// TODO: Lets sleep for a bit to allow our program to update
+	// the config file.  This would be better done some
+	// other way, but this is working right now.
+	sleep(1);
+
         header( "Location: $baseUrl/configure.php" );
 	exit( 0 );
     }

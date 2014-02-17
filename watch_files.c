@@ -81,6 +81,14 @@ void get_event (int fd, const char * target)
                       		remove(old_filename);
 				system("ipe-ro");
                         }
+			if (strcmp(action, "weather_data.json") == 0) {
+				snprintf(full_filename, sizeof(full_filename), "%s%s",
+					"/var/www/rasptimer/",action);
+				system("ipe-rw");
+				copy_file(old_filename, full_filename);
+				remove(old_filename);
+				system("ipe-ro");
+			}
                 }
 
                 i += sizeof(struct inotify_event) + pevent->len;

@@ -18,9 +18,9 @@ $title = "Rasptimer";
 //         otherwise we just skip.
 
 $devices = array(
-    "Low Speed pump" => array(6,1,1),
-    "High Speed pump" => array(5,1,3),
-    "Sweep valve" => array(4,0,3),
+    "Low Speed pump" => array(6,1,1,0),
+    "High Speed pump" => array(5,1,3,1),
+    "Sweep valve" => array(4,0,3,1),
 );
 
 // Where to log events. This file must be writeable by the webserver user, e.g. "chown www-data /var/log/rasptimer.log"

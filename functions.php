@@ -18,8 +18,34 @@ function runGpio( $cmd, $pin, $args = '' ) {
 
     foreach( $devices as $deviceName => $devicePin ) {
 	    if( $devicePin[0] == $pin) {
+		// If we are a cron job, lets check the day interval to see
+		// if we want to filter this job out based on the interval.
 		if( $cmd == "cron-write" && (date("j") % $devicePin[2] != 0)) {
-			$run_today = False;
+			if ($devicePin[3] != 0) {
+				// Looks like the wind bit was set, so we need
+				// to check the wind to see if we should run
+				// this even though its not it's interval
+				$filename = "weather_data.json";
+				$data = file_get_contents($filename);
+				$parsed_json = json_decode($data);
+
+				$date_captured = $parsed_json->{'current_observation'}->{'observation_epoch'};
+				if ((time() - (60*60*24)) > $date_captured) {
+					$json_string = file_get_contents(
+						"http://api.wunderground.com/api/".
+						$wunderground_key."/geolookup/conditions/q/".
+						$wundergound_location.".json");
+					file_put_contents('/tmp/weather_data.json', $json_string);
+					$parsed_json = json_decode($json_string);
+				}
+
+				$wind_mph = $parsed_json->{'current_observation'}->{'wind_mph'};
+				if (intval(${wind_mph}) < 10) {
+					$run_today = False;
+				}
+			} else {
+				$run_today = False;
+			}
 		}
 		if( $cmd == "cron-write") {
 			$cmd = "write";

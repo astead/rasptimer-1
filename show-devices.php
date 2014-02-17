@@ -7,6 +7,7 @@
        <td>Pin</td>
        <td>Exclusive</td>
        <td>Day Interval</td>
+       <td>Wind (>10mph)</td>
     </tr>
 <?php
     foreach( $devices as $deviceName => $devicePin ) {
@@ -33,9 +34,42 @@
 	       <option value="20" <?= $devicePin[2]==20 ? "selected":""?>>Every 20th day</option>
       </select>
      </td>
+     <td>
+        <input type="checkbox" name="<?php print($devicePin[0]) ?>-Wind" <?= $devicePin[3]==1 ? "checked":""?> onclick="this.form.submit()"/>
+     </td>
     </tr>
 <?php
     }
-?> 
+?>
+<tr>
+<td colspan="4">
+<?php
+  $filename = "weather_data.json";
+  $data = file_get_contents($filename);
+  $parsed_json = json_decode($data);
+ 
+  $date_captured = $parsed_json->{'current_observation'}->{'observation_epoch'};
+  if ((time() - (60*60*24)) > $date_captured) {
+    $json_string = file_get_contents(
+	"http://api.wunderground.com/api/".
+	$wunderground_key."/geolookup/conditions/q/".
+	$wunderground_location.".json");
+    file_put_contents('/tmp/weather_data.json', $json_string);
+    $parsed_json = json_decode($json_string);
+  }
+
+  $location = $parsed_json->{'location'}->{'city'};
+  $temp_f = $parsed_json->{'current_observation'}->{'temp_f'};
+  $relative_humidity = $parsed_json->{'current_observation'}->{'relative_humidity'};
+  $wind_mph = $parsed_json->{'current_observation'}->{'wind_mph'};
+  $precip_today_in = $parsed_json->{'current_observation'}->{'precip_today_in'};
+
+  echo "Temperature: ${temp_f}&deg;F<br/>";
+  echo "Humidity: ${relative_humidity}<br/>";
+  echo "Wind: ${wind_mph} mph<br/>";
+  echo "Precipitation: ${precip_today_in} in<br/>";
+?>
+</td>
+</tr> 
    </table>
   </form>

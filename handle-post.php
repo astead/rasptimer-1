@@ -14,9 +14,8 @@
                 issueAt( $deviceName, $_POST[$durationPar], $turnOn ? "0" : "1" );
             }
         }
-
 	$IntervalPar = $devicePin[0] . '-Interval';
-	if( isset( $_POST[$IntervalPar] ) && $_POST[$IntervalPar] != $devicePin[2] ) {
+	if( isset( $_POST[$IntervalPar] ) ) {
 		$rewrite_config = True;
 	}
     }
@@ -49,19 +48,18 @@
 
 			foreach( $devices as $deviceName => $devicePin ) {
 			   $IntervalPar = $devicePin[0] . '-Interval';
+			   $WindPar = $devicePin[0] . '-Wind';
+		           fwrite($handle_out, "    \"" . 
+		           $deviceName . "\" => array(" . 
+					$devicePin[0].",".
+					$devicePin[1].",");
 			   if( isset( $_POST[$IntervalPar] ) && $_POST[$IntervalPar] != $devicePin[2] ) {
-				fwrite($handle_out, "    \"" . 
-					$deviceName . "\" => array(" . 
-					$devicePin[0].",".
-					$devicePin[1].",".
-					$_POST[$IntervalPar]."),\n");
+				fwrite($handle_out, $_POST[$IntervalPar].",");
 			   } else {
-				fwrite($handle_out, "    \"" . 
-					$deviceName . "\" => array(" . 
-					$devicePin[0].",".
-					$devicePin[1].",".
-					$devicePin[2]."),\n");
+				fwrite($handle_out, $devicePin[2].",");
 			   }
+			   fwrite($handle_out, ($_POST[$WindPar]=="on"?"1":"0")."),");
+			   fwrite($handle_out, "\n");
 			}
 			fwrite($handle_out, $line);
 			
@@ -75,7 +73,7 @@
 	fclose($handle);
 	unlink($source);
 	fclose($handle_out);
-
+	
 	// TODO: Lets sleep for a bit to allow our program to update
 	// the config file.  This would be better done some
 	// other way, but this is working right now.
